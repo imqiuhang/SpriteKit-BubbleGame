@@ -8,9 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import <SpriteKit/SpriteKit.h>
+#import "UIColor+ColorExtension.h"
+#import "CommUtil.h"
+#import <UIKit/UIKit.h>
 
 @interface GameConfigs : NSObject
 
++ (CGFloat)bubbleGrowingSpeed;
++ (CGFloat)maxBubbleScale;
++ (NSTimeInterval)growing2MaxDuration;
++ (CGFloat)minBubble2Stay;
 
 @end
 

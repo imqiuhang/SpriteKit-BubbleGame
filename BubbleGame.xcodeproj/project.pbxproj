@@ -12,6 +12,9 @@
 		EC082955222FE2060033A12B /* ImageReource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC082954222FE2060033A12B /* ImageReource.xcassets */; };
 		EC082959222FE3B50033A12B /* CommUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = EC082958222FE3B50033A12B /* CommUtil.m */; };
 		EC08295D222FEA6B0033A12B /* GameConfigs.m in Sources */ = {isa = PBXBuildFile; fileRef = EC08295C222FEA6B0033A12B /* GameConfigs.m */; };
+		EC494D4E222FF516002D98E5 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC494D4D222FF516002D98E5 /* Actions.sks */; };
+		EC494D51222FF7B6002D98E5 /* SpinnyNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EC494D50222FF7B6002D98E5 /* SpinnyNode.m */; };
+		EC494D54222FF9E0002D98E5 /* UIColor+ColorExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = EC494D53222FF9E0002D98E5 /* UIColor+ColorExtension.m */; };
 		ECF9A1B5222EA82400952DA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1B4222EA82400952DA2 /* AppDelegate.m */; };
 		ECF9A1BC222EA82400952DA2 /* MainGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1BB222EA82400952DA2 /* MainGameScene.m */; };
 		ECF9A1BF222EA82400952DA2 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1BE222EA82400952DA2 /* GameViewController.m */; };
@@ -31,6 +34,11 @@
 		EC082958222FE3B50033A12B /* CommUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommUtil.m; sourceTree = "<group>"; };
 		EC08295B222FEA6B0033A12B /* GameConfigs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameConfigs.h; sourceTree = "<group>"; };
 		EC08295C222FEA6B0033A12B /* GameConfigs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameConfigs.m; sourceTree = "<group>"; };
+		EC494D4D222FF516002D98E5 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
+		EC494D4F222FF7B6002D98E5 /* SpinnyNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpinnyNode.h; sourceTree = "<group>"; };
+		EC494D50222FF7B6002D98E5 /* SpinnyNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpinnyNode.m; sourceTree = "<group>"; };
+		EC494D52222FF9E0002D98E5 /* UIColor+ColorExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorExtension.h"; sourceTree = "<group>"; };
+		EC494D53222FF9E0002D98E5 /* UIColor+ColorExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorExtension.m"; sourceTree = "<group>"; };
 		ECF9A1B0222EA82400952DA2 /* BubbleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubbleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF9A1B3222EA82400952DA2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		ECF9A1B4222EA82400952DA2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -63,6 +71,8 @@
 				EC08294D222FC1DD0033A12B /* RedBall.m */,
 				EC082951222FC5470033A12B /* Bubble.h */,
 				EC082952222FC5470033A12B /* Bubble.m */,
+				EC494D4F222FF7B6002D98E5 /* SpinnyNode.h */,
+				EC494D50222FF7B6002D98E5 /* SpinnyNode.m */,
 			);
 			path = Actors;
 			sourceTree = "<group>";
@@ -72,6 +82,8 @@
 			children = (
 				EC082957222FE3B50033A12B /* CommUtil.h */,
 				EC082958222FE3B50033A12B /* CommUtil.m */,
+				EC494D52222FF9E0002D98E5 /* UIColor+ColorExtension.h */,
+				EC494D53222FF9E0002D98E5 /* UIColor+ColorExtension.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -113,6 +125,7 @@
 				ECF9A1BD222EA82400952DA2 /* GameViewController.h */,
 				ECF9A1BE222EA82400952DA2 /* GameViewController.m */,
 				ECF9A1C0222EA82400952DA2 /* Main.storyboard */,
+				EC494D4D222FF516002D98E5 /* Actions.sks */,
 				ECF9A1C3222EA82500952DA2 /* Assets.xcassets */,
 				EC082954222FE2060033A12B /* ImageReource.xcassets */,
 				ECF9A1C5222EA82500952DA2 /* LaunchScreen.storyboard */,
@@ -192,6 +205,7 @@
 				EC082955222FE2060033A12B /* ImageReource.xcassets in Resources */,
 				ECF9A1C4222EA82500952DA2 /* Assets.xcassets in Resources */,
 				ECF9A1C7222EA82500952DA2 /* LaunchScreen.storyboard in Resources */,
+				EC494D4E222FF516002D98E5 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,10 +216,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC494D51222FF7B6002D98E5 /* SpinnyNode.m in Sources */,
 				EC08294E222FC1DD0033A12B /* RedBall.m in Sources */,
 				ECF9A1BC222EA82400952DA2 /* MainGameScene.m in Sources */,
 				ECF9A1BF222EA82400952DA2 /* GameViewController.m in Sources */,
 				EC08295D222FEA6B0033A12B /* GameConfigs.m in Sources */,
+				EC494D54222FF9E0002D98E5 /* UIColor+ColorExtension.m in Sources */,
 				EC082953222FC5470033A12B /* Bubble.m in Sources */,
 				ECF9A1CA222EA82500952DA2 /* main.m in Sources */,
 				ECF9A1B5222EA82400952DA2 /* AppDelegate.m in Sources */,

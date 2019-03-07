@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "CommUtil.h"
+#import "GameConfigs.h"
 
 typedef NS_ENUM(NSUInteger, RedBallEffectType) {
     RedBallEffectTypeNone,

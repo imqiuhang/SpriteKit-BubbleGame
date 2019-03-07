@@ -16,11 +16,21 @@ typedef NS_ENUM(NSUInteger, BubbleType) {
 
 @interface Bubble : SKSpriteNode
 
-@property (nonatomic)BOOL creating;//正在创建中
-@property (nonatomic)BubbleType bubbleType;
-
 + (instancetype)randomBubbleWithProb:(float)prob;
 + (instancetype)bubbleWithType:(BubbleType)bubbleType;
+
+//normal or ice 
+@property (nonatomic)BubbleType bubbleType;
+
+//正在变大中
+@property (nonatomic,readonly)BOOL growthing;
+
+- (void)beganGrowthingWithTargetScale:(CGFloat)scale
+                             duration:(NSTimeInterval)duration;
+- (void)stopGrowthing;
+
+//渐隐 然后移除
+- (void)fadeOut;
 
 @end
 
