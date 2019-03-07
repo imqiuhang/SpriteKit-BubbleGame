@@ -38,7 +38,10 @@ static NSString *const kGrowthingAnimationName = @"action_buuble_self_growthing"
 
 + (instancetype)bubbleWithType:(BubbleType)bubbleType {
    Bubble *bubble =  bubbleType==BubbleTypeNormal?[self spriteNodeWithImageNamed:@"bubble"]:[self spriteNodeWithImageNamed:@"bubble_ice"];
+    bubble.bubbleType = bubbleType;
+    bubble.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:bubble.size.width/2.f];
     [bubble setScale:0.f];
+    bubble.physicsBody.affectedByGravity = NO;
     return bubble;
 }
 

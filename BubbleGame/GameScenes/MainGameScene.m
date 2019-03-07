@@ -38,7 +38,9 @@
 #pragma mark - bubble
 - (void)addBubbleInPosition:(CGPoint)pos {
     
-    Bubble *bubble = [Bubble randomBubbleWithProb:0.25];
+    Bubble *bubble = [Bubble randomBubbleWithProb:0.3];
+    bubble.physicsBody.collisionBitMask = GameConfigs.bubbleCollisionBitMask;
+    bubble.physicsBody.contactTestBitMask = GameConfigs.redBallCollisionBitMask;
     bubble.position = pos;
     [self addChild:bubble];
     [bubble beganGrowthingWithTargetScale:GameConfigs.maxBubbleScale duration:GameConfigs.growing2MaxDuration];
@@ -47,10 +49,16 @@
 
 - (void)updateBubbleStausWhenTouchOff {
     [self.currentGrowthingBubble stopGrowthing];
+    self.currentGrowthingBubble.physicsBody.affectedByGravity = [CommUtil randomNumberIncludeFrom:0 includeTo:3]==0;
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
     }
     self.currentGrowthingBubble = nil;
+}
+
+#pragma Mark- redball
+- (void)setupRedballs {
+    
 }
 
 #pragma mark - effect
@@ -98,9 +106,9 @@
 
 #pragma mark - setup
 - (void)setup {
-    self.physicsWorld.gravity = CGVectorMake(0, 0);
-    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+    self.physicsWorld.gravity = CGVectorMake(0, -9.8);
     self.physicsWorld.contactDelegate = self;
+    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
 }
 
 @end

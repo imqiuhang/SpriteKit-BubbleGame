@@ -23,7 +23,15 @@
 }
 
 + (NSTimeInterval)growing2MaxDuration {
-    return 5.f;
+    return 2.f;
+}
+
++ (uint32_t)bubbleCollisionBitMask {
+    return 1;
+}
+
++ (uint32_t)redBallCollisionBitMask {
+    return 2;
 }
 
 @end

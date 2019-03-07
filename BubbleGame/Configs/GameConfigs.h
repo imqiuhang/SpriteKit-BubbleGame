@@ -19,6 +19,9 @@
 + (NSTimeInterval)growing2MaxDuration;
 + (CGFloat)minBubble2Stay;
 
++ (uint32_t)bubbleCollisionBitMask;
++ (uint32_t)redBallCollisionBitMask;
+
 @end
 
 
