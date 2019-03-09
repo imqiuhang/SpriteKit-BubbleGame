@@ -35,6 +35,29 @@
 
 - (void)didEndContact:(SKPhysicsContact *)contact {
     
+    RedBall *redBall = nil;
+    Bubble  *bubble = nil;
+    
+    if ([contact.bodyA.node isKindOfClass:RedBall.class]) {
+        redBall = (RedBall*)contact.bodyA.node;
+        bubble = (Bubble*)contact.bodyB.node;
+    }else {
+        redBall = (RedBall*)contact.bodyB.node;
+        bubble = (Bubble*)contact.bodyA.node;
+    }
+    
+    if (!([redBall isKindOfClass:RedBall.class]&&[bubble isKindOfClass:Bubble.class])) {
+        return;
+    }
+    
+    redBall.effectType = bubble.bubbleType==BubbleTypeIce?RedBallEffectTypeIceing:RedBallEffectTypeNone;
+    
+    if (bubble.growthing) {
+        [bubble stopGrowthing];
+        [bubble fadeOut];
+        [self creatBubbleFaildWithSize:bubble.size];
+        self.currentGrowthingBubble = nil;
+    }
 }
 
 #pragma mark - bubble
@@ -52,12 +75,22 @@
 }
 
 - (void)updateBubbleStausWhenTouchOff {
+    
+    if (!self.currentGrowthingBubble) {
+        return;
+    }
+    
     [self.currentGrowthingBubble stopGrowthing];
     self.currentGrowthingBubble.physicsBody.affectedByGravity = self.currentGrowthingBubble.bubbleType==BubbleTypeIce;
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
+        [self creatBubbleFaildWithSize:self.currentGrowthingBubble.size];
+    }else {
+        [self creatGreatBubbleSucceedWithSize:self.currentGrowthingBubble.size];
     }
     self.currentGrowthingBubble = nil;
+    
+    
 }
 
 #pragma Mark- redball
@@ -107,6 +140,15 @@
     [self updateBubbleStausWhenTouchOff];
 }
 
+#pragma mark - grade
+- (void)creatGreatBubbleSucceedWithSize:(CGSize)size {
+    NSLog(@"-------创建泡泡成功-------\n size:%f",size.width);
+}
+
+- (void)creatBubbleFaildWithSize:(CGSize)size {
+    NSLog(@"-------创建泡泡失败-------\n size:%f",size.width);
+}
+
 #pragma mark touch delegate
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     for (UITouch *t in touches) {[self touchDownAtPoint:[t locationInNode:self]];}
@@ -130,7 +172,6 @@
     self.physicsWorld.gravity = CGVectorMake(0, -9.8);
     self.physicsWorld.contactDelegate = self;
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
-
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self setupRedballs];

@@ -23,6 +23,7 @@
 + (uint32_t)redBallCollisionBitMask;
 + (CGFloat)redBallSpeedForce;
 
++ (CGFloat)redBallIceSpeedReducedRate;
 
 @end
 

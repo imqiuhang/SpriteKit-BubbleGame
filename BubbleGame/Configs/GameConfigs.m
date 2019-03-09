@@ -27,15 +27,18 @@
 }
 
 + (uint32_t)bubbleCollisionBitMask {
-    return 1;
+    return 0x00000001;
 }
 
 + (uint32_t)redBallCollisionBitMask {
-    return 2;
+    return 0x00000002;
 }
 
 + (CGFloat)redBallSpeedForce {
     return 150000;
 }
 
++ (CGFloat)redBallIceSpeedReducedRate {
+    return 0.35f;
+}
 @end

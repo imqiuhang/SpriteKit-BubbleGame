@@ -26,4 +26,16 @@
     return redBall;
 }
 
+- (void)setEffectType:(RedBallEffectType)effectType {
+    if (effectType==_effectType) {
+        return;
+    }
+    _effectType = effectType;
+    
+    self.texture  = [SKTexture textureWithImageNamed:effectType==RedBallEffectTypeIceing?@"ball_ice":@"ball"];
+    BOOL isIceStatus = effectType==RedBallEffectTypeIceing;
+    CGVector originalVelocity = self.physicsBody.velocity ;
+    self.physicsBody.velocity = CGVectorMake(isIceStatus?(originalVelocity.dx*GameConfigs.redBallIceSpeedReducedRate):(originalVelocity.dx/GameConfigs.redBallIceSpeedReducedRate), isIceStatus?(originalVelocity.dy*GameConfigs.redBallIceSpeedReducedRate):(originalVelocity.dy/GameConfigs.redBallIceSpeedReducedRate));
+}
+
 @end
