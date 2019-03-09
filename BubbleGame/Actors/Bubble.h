@@ -18,6 +18,7 @@ typedef NS_ENUM(NSUInteger, BubbleType) {
 
 + (instancetype)randomBubbleWithProb:(float)prob;
 + (instancetype)bubbleWithType:(BubbleType)bubbleType;
++ (instancetype)bubbleForIce:(BOOL)isIce;
 
 //normal or ice 
 @property (nonatomic)BubbleType bubbleType;

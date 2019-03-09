@@ -34,4 +34,8 @@
     return 2;
 }
 
++ (CGFloat)redBallSpeedForce {
+    return 150000;
+}
+
 @end

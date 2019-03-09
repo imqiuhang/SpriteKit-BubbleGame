@@ -15,6 +15,8 @@
 
 @property (nonatomic,strong)Bubble *currentGrowthingBubble;
 
+@property (nonatomic)NSInteger randomFlag;
+
 @end
 
 @implementation MainGameScene
@@ -38,18 +40,20 @@
 #pragma mark - bubble
 - (void)addBubbleInPosition:(CGPoint)pos {
     
-    Bubble *bubble = [Bubble randomBubbleWithProb:0.3];
+    Bubble *bubble = [Bubble bubbleForIce:self.randomFlag>0&&self.randomFlag%3==0];
     bubble.physicsBody.collisionBitMask = GameConfigs.bubbleCollisionBitMask;
     bubble.physicsBody.contactTestBitMask = GameConfigs.redBallCollisionBitMask;
     bubble.position = pos;
     [self addChild:bubble];
     [bubble beganGrowthingWithTargetScale:GameConfigs.maxBubbleScale duration:GameConfigs.growing2MaxDuration];
     self.currentGrowthingBubble = bubble;
+    
+    self.randomFlag ++;
 }
 
 - (void)updateBubbleStausWhenTouchOff {
     [self.currentGrowthingBubble stopGrowthing];
-    self.currentGrowthingBubble.physicsBody.affectedByGravity = [CommUtil randomNumberIncludeFrom:0 includeTo:3]==0;
+    self.currentGrowthingBubble.physicsBody.affectedByGravity = self.currentGrowthingBubble.bubbleType==BubbleTypeIce;
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
     }
@@ -59,6 +63,22 @@
 #pragma Mark- redball
 - (void)setupRedballs {
     
+    CGFloat force = GameConfigs.redBallSpeedForce;
+    
+    NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(force, force)],
+                         [NSValue valueWithCGVector:CGVectorMake(force, -force)],
+                         [NSValue valueWithCGVector:CGVectorMake(-force, force)]];
+    
+    for(int i=0;i<3;i++) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1*i * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            RedBall *redball = [RedBall redBall];
+            redball.physicsBody.collisionBitMask = GameConfigs.redBallCollisionBitMask;
+            redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
+            redball.position = CGPointMake(self.size.width/2.f + i*30, self.size.height/2.f);
+            [self addChild:redball];
+            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
+        });
+    }
 }
 
 #pragma mark - effect
@@ -106,9 +126,15 @@
 
 #pragma mark - setup
 - (void)setup {
+    
     self.physicsWorld.gravity = CGVectorMake(0, -9.8);
     self.physicsWorld.contactDelegate = self;
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self setupRedballs];
+    });
 }
 
 @end

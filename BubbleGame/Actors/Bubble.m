@@ -42,9 +42,15 @@ static NSString *const kGrowthingAnimationName = @"action_buuble_self_growthing"
     bubble.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:bubble.size.width/2.f];
     [bubble setScale:0.f];
     bubble.physicsBody.affectedByGravity = NO;
+    bubble.physicsBody.mass = 500;
+    bubble.physicsBody.restitution = 0.2;
+    bubble.physicsBody.angularDamping = 0.4;
+    bubble.physicsBody.linearDamping = 0.3f;
     return bubble;
 }
 
-
++ (instancetype)bubbleForIce:(BOOL)isIce {
+    return [self bubbleWithType:isIce?BubbleTypeIce:BubbleTypeNormal];
+}
 
 @end

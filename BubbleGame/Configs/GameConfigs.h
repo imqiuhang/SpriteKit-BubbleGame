@@ -21,6 +21,8 @@
 
 + (uint32_t)bubbleCollisionBitMask;
 + (uint32_t)redBallCollisionBitMask;
++ (CGFloat)redBallSpeedForce;
+
 
 @end
 
