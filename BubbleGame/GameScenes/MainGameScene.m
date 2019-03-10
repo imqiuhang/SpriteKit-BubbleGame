@@ -2,7 +2,7 @@
 //  GameScene.m
 //  BubbleGame
 //
-//  Created by imqiuhang on 2019/3/5.
+//  Created by imqiuhang on 2019/3/10.
 //  Copyright © 2019 imqiuhang. All rights reserved.
 //
 
@@ -11,6 +11,7 @@
 #import "Bubble.h"
 #import "SpinnyNode.h"
 #import "MianSoundManager.h"
+#import "GameEmitterManager.h"
 
 static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 118};
 
@@ -20,6 +21,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 @property (nonatomic)NSInteger randomFlag;
 
 @property (nonatomic,strong)MianSoundManager *soundManager;
+@property (nonatomic,strong)GameEmitterManager *emitterManager;
 
 @end
 
@@ -58,10 +60,12 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     if (bubble.growthing) {
         [bubble stopGrowthing];
-        [bubble fadeOut];
-        [self creatBubbleFaildWithSize:bubble.size];
-        self.currentGrowthingBubble = nil;
+        [self creatBubbleFaildWithBubble:bubble];
         [self.soundManager playMakeBubbleFaildSoundForByHit];
+        [bubble fadeOut];
+        self.currentGrowthingBubble = nil;
+       
+        
     }
 }
 
@@ -91,10 +95,10 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     self.currentGrowthingBubble.physicsBody.affectedByGravity = self.currentGrowthingBubble.bubbleType==BubbleTypeIce;
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
-        [self creatBubbleFaildWithSize:self.currentGrowthingBubble.size];
+        [self creatBubbleFaildWithBubble:self.currentGrowthingBubble];
         [self.soundManager playMakeBubbleFaildSoundForTooSmall];
     }else {
-        [self creatGreatBubbleSucceedWithSize:self.currentGrowthingBubble.size];
+        [self creatGreatBubbleSucceedWithBubble:self.currentGrowthingBubble];
     }
     self.currentGrowthingBubble = nil;
     
@@ -151,14 +155,16 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 }
 
 #pragma mark - grade
-- (void)creatGreatBubbleSucceedWithSize:(CGSize)size {
+- (void)creatGreatBubbleSucceedWithBubble:(Bubble *)bubble {
      [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
-    NSLog(@"-------创建泡泡成功-------\n size:%f",size.width);
+    [self.emitterManager runAddBubbleSucceedEmitterWithNode:bubble];
+    NSLog(@"-------创建泡泡成功-------\n size:%f",bubble.size.width);
 }
 
-- (void)creatBubbleFaildWithSize:(CGSize)size {
+- (void)creatBubbleFaildWithBubble:(Bubble *)bubble {
     [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
-    NSLog(@"-------创建泡泡失败-------\n size:%f",size.width);
+    [self.emitterManager runAddBubbleFaildEmitterWithPosition:bubble.position];
+    NSLog(@"-------创建泡泡失败-------\n size:%f",bubble.size.width);
 }
 
 #pragma mark touch delegate
@@ -187,6 +193,8 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     self.soundManager = [[MianSoundManager alloc] initWithScene:self];
     [self.soundManager controlBgMusicWithPlay:YES];
+    
+    self.emitterManager = [[GameEmitterManager alloc] initWithScene:self];
     
     SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];
     bgImageNode.size = self.size;

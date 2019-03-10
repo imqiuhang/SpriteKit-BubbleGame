@@ -2,7 +2,7 @@
 //  SpinnyNode.h
 //  BubbleGame
 //
-//  Created by imqiuhang on 2019/3/6.
+//  Created by imqiuhang on 2019/3/10.
 //  Copyright © 2019 imqiuhang. All rights reserved.
 //
 
