@@ -90,17 +90,17 @@
     }
     self.currentGrowthingBubble = nil;
     
-    
+//
 }
 
 #pragma Mark- redball
 - (void)setupRedballs {
     
-    CGFloat force = GameConfigs.redBallSpeedForce;
+    CGFloat speed = GameConfigs.redBallSpeedNormal;
     
-    NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(force, force)],
-                         [NSValue valueWithCGVector:CGVectorMake(force, -force)],
-                         [NSValue valueWithCGVector:CGVectorMake(-force, force)]];
+    NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(speed, speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(speed, -speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(-speed, speed)]];
     
     for(int i=0;i<3;i++) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1*i * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -109,7 +109,9 @@
             redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
             redball.position = CGPointMake(self.size.width/2.f + i*30, self.size.height/2.f);
             [self addChild:redball];
-            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
+            //可以通过施加一个推力（牛顿）或者直接赋值速度，直接赋值速度比较方便，推力需要计算
+//            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
+            redball.physicsBody.velocity = [vectors[i] CGVectorValue];
         });
     }
 }

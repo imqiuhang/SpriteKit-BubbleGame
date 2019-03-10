@@ -34,11 +34,11 @@
     return 0x00000002;
 }
 
-+ (CGFloat)redBallSpeedForce {
-    return 150000;
++ (CGFloat)redBallSpeedNormal {
+    return 300;
 }
 
-+ (CGFloat)redBallIceSpeedReducedRate {
-    return 0.35f;
++ (CGFloat)redBallSpeedIce {
+    return 150;
 }
 @end
