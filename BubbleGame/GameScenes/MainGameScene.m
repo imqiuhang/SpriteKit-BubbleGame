@@ -12,6 +12,7 @@
 #import "SpinnyNode.h"
 #import "MianSoundManager.h"
 #import "GameEmitterManager.h"
+#import "GameButton.h"
 
 static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 118};
 
@@ -23,13 +24,23 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 @property (nonatomic,strong)MianSoundManager *soundManager;
 @property (nonatomic,strong)GameEmitterManager *emitterManager;
 
+@property (nonatomic)CFTimeInterval gameBeganTime;
+
 @end
 
 @implementation MainGameScene
+{
+    BOOL _isGameStart;
+}
 
-- (instancetype)initWithSize:(CGSize)size {
++ (instancetype)sceneWithSize:(CGSize)size config:(MainGameSceneCreatConfig *)configs {
+    return [[MainGameScene alloc] initWithSize:size config:configs];
+}
+
+- (instancetype)initWithSize:(CGSize)size config:(MainGameSceneCreatConfig *)configs {
     if (self=[super initWithSize:size]) {
-        [self setup];
+        _configs  = configs;
+        [self setupGamePrepareContent];
     }
     return self;
 }
@@ -64,8 +75,6 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
         [self.soundManager playMakeBubbleFaildSoundForByHit];
         [bubble fadeOut];
         self.currentGrowthingBubble = nil;
-       
-        
     }
 }
 
@@ -112,18 +121,19 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(speed, speed)],
                          [NSValue valueWithCGVector:CGVectorMake(speed, -speed)],
-                         [NSValue valueWithCGVector:CGVectorMake(-speed, speed)]];
+                         [NSValue valueWithCGVector:CGVectorMake(-speed, speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(-speed, -speed)]];
     
-    for(int i=0;i<3;i++) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1*i + 3) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    for(int i=0;i<3+self.configs.level;i++) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((0.5*i + 1) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             RedBall *redball = [RedBall redBall];
             redball.physicsBody.collisionBitMask = GameConfigs.redBallCollisionBitMask;
             redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
-            redball.position = CGPointMake(self.size.width/2.f + i*30, self.size.height/2.f);
+            redball.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
             [self addChild:redball];
             //可以通过施加一个推力（牛顿）或者直接赋值速度，直接赋值速度比较方便，推力需要计算
 //            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
-            redball.physicsBody.velocity = [vectors[i] CGVectorValue];
+            redball.physicsBody.velocity = [vectors[i%vectors.count] CGVectorValue];
         });
     }
 }
@@ -138,19 +148,41 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 
 #pragma mark  game loop
 -(void)update:(CFTimeInterval)currentTime {
+    
+    if (_isGameStart) {
+        if(self.gameBeganTime==0){
+            self.gameBeganTime = currentTime;
+        }else {
+            [self updateGameDuration:currentTime - self.gameBeganTime];
+        }
+    }
+}
+
+- (void)updateGameDuration:(CFTimeInterval)gameDuration {
+    
 }
 
 #pragma mark - touch control
 - (void)touchDownAtPoint:(CGPoint)pos {
+    if (!_isGameStart) {
+        return;
+    }
     [self addBubbleInPosition:pos];
 }
 
 - (void)touchMovedToPoint:(CGPoint)pos {
+    
     [self addSpinnyInPosition:pos];
-    [self updateBubbleStausWhenTouchOff];
+    
+    if (!_isGameStart) {
+        return;
+    }
 }
 
 - (void)touchUpAtPoint:(CGPoint)pos {
+    if (!_isGameStart) {
+        return;
+    }
     [self updateBubbleStausWhenTouchOff];
 }
 
@@ -185,7 +217,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 }
 
 #pragma mark - setup
-- (void)setup {
+- (void)setupGamePrepareContent {
     
     self.physicsWorld.gravity = CGVectorMake(0, -9.8);
     self.physicsWorld.contactDelegate = self;
@@ -201,8 +233,53 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     bgImageNode.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
     [self addChild:bgImageNode];
     
-    [self setupRedballs];
+    [self.emitterManager addSnowWithEdge:kPhysicsWorldInsert];
     
+    GameButton *startGameBtn = [GameButton buttonWithImageNamed:@"startGame"];
+    startGameBtn.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+    [startGameBtn setScale:3.f];
+    [GameEmitterManager addFireForNode:startGameBtn];
+    [self addChild:startGameBtn];
+    WeakSelf;
+    [startGameBtn setOnSelectCallback:^(GameButton *button) {
+        [weakSelf setUpStartGameContent];
+        [button runAction:[SKAction sequence:@[
+                                               [SKAction fadeOutWithDuration:2.f],
+                                               [SKAction removeFromParent],
+                                               ]]];
+    }];
+}
+
+- (void)setUpStartGameContent {
+    [self.soundManager playReadyGoSound];
+    [self setupRedballs];
+    [self setupMenu];
+    _isGameStart = YES;
+}
+
+- (void)setupMenu {
+    
+    GameButton *gameContrlBtn = [GameButton buttonWithImageNamed:@"game_stop"];
+    gameContrlBtn.position = CGPointMake(100, 50);
+    [gameContrlBtn setScale:3];
+    WeakSelf;
+    [gameContrlBtn setOnSelectCallback:^(GameButton *button){
+        weakSelf.paused = !weakSelf.paused;
+        button.texture = [SKTexture textureWithImageNamed:weakSelf.paused?@"game_play":@"game_stop"] ;
+    }];
+    [self addChild:gameContrlBtn];
+}
+
+
+@end
+
+
+@implementation MainGameSceneCreatConfig
+
++ (instancetype)firstConfig {
+    MainGameSceneCreatConfig *config = [MainGameSceneCreatConfig new];
+    config.isFirst = YES;
+    return config;
 }
 
 @end

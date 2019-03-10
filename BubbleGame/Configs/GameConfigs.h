@@ -12,6 +12,8 @@
 #import "CommUtil.h"
 #import <UIKit/UIKit.h>
 
+#define WeakSelf __weak typeof(self) weakSelf = self;
+
 @interface GameConfigs : NSObject
 
 + (CGFloat)bubbleGrowingSpeed;

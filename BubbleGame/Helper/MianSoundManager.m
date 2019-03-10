@@ -63,8 +63,9 @@
     
 }
 
-- (void)stopAll {
-    
+- (void)playReadyGoSound {
+    [self.relateScene runAction:[SKAction playSoundFileNamed:@"game_readyGo.wav" waitForCompletion:NO]];
 }
+
 
 @end

@@ -21,8 +21,8 @@
 - (void)controlBubbleGrowingSoundWithPlay:(BOOL)play;
 - (void)playMakeBubbleFaildSoundForTooSmall;
 - (void)playMakeBubbleFaildSoundForByHit;
+- (void)playReadyGoSound;
 
-- (void)stopAll;
 
 @end
 

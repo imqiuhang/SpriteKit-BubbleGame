@@ -19,7 +19,10 @@
 
 - (void)runAddBubbleFaildEmitterWithPosition:(CGPoint)pos;
 - (void)runAddBubbleSucceedEmitterWithNode:(SKNode *)node;
+- (void)addSnowWithEdge:(UIEdgeInsets)edge;
+- (void)removeSnow;
 
++ (void)addFireForNode:(SKNode *)node;
 
 @end
 
