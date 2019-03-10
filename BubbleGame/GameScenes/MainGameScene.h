@@ -24,7 +24,7 @@
 
 @property (nonatomic)BOOL isWin;
 @property (nonatomic)BOOL isFirst;
-@property (nonatomic)BOOL level;
+@property (nonatomic)NSInteger level;
 
 + (instancetype)firstConfig;
 

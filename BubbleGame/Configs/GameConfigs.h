@@ -27,6 +27,11 @@
 + (CGFloat)redBallSpeedNormal;
 + (CGFloat)redBallSpeedIce;
 
++ (CGFloat)nomuchTimeRate;
+
++ (CGFloat)maxBubbleAddForLevel:(NSInteger)level;
++ (CGFloat)totalTimeForPass;
+
 @end
 
 

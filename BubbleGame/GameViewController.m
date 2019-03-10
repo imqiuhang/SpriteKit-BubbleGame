@@ -22,16 +22,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupGameWithConfig:MainGameSceneCreatConfig.firstConfig];
-    
-    for(NSString *fontFamilyName in [UIFont familyNames])
-    {
-        NSLog(@"\nfamily:'%@'",fontFamilyName);
-        for(NSString *fontName in [UIFont fontNamesForFamilyName:fontFamilyName])
-        {
-            NSLog(@"\tfont:'%@'",fontName);
-        }
-        NSLog(@"-------------\n");
-    }
 }
 
 - (void)setupGameWithConfig:(MainGameSceneCreatConfig *)config {
@@ -43,7 +33,7 @@
     self.scene.scaleMode = SKSceneScaleModeAspectFill;
     
     SKView *skView = (SKView *)self.view;
-    [skView presentScene:self.scene transition:[SKTransition revealWithDirection:SKTransitionDirectionLeft duration:0.75]];
+    [skView presentScene:self.scene];
     
     //debug
     skView.showsFPS = YES;

@@ -14,6 +14,7 @@
 #import "GameEmitterManager.h"
 #import "GameButton.h"
 #import "GameLevelLabel.h"
+#import "GameProgressBar.h"
 
 static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 118};
 
@@ -25,7 +26,11 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 @property (nonatomic,strong)MianSoundManager *soundManager;
 @property (nonatomic,strong)GameEmitterManager *emitterManager;
 
+@property (nonatomic,strong)GameProgressBar *bubbleAddBar;
+@property (nonatomic,strong)GameProgressBar *timeBar;
+
 @property (nonatomic)CFTimeInterval gameBeganTime;
+@property (nonatomic)CGFloat bubbleProgess;;
 
 @end
 
@@ -160,7 +165,13 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 }
 
 - (void)updateGameDuration:(CFTimeInterval)gameDuration {
-    
+    if (gameDuration>=GameConfigs.totalTimeForPass) {
+        if (self.onGameNeedRestart) {
+            self.onGameNeedRestart(NO);
+        }
+        return;
+    }
+    [self.timeBar updateProgress:1.00f-(gameDuration/GameConfigs.totalTimeForPass) animation:NO];
 }
 
 #pragma mark - touch control
@@ -189,17 +200,32 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 
 #pragma mark - grade
 - (void)creatGreatBubbleSucceedWithBubble:(Bubble *)bubble {
-     [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
+    [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
     [self.emitterManager runAddBubbleSucceedEmitterWithNode:bubble];
+    self.bubbleProgess+=(0.2 * (bubble.xScale/GameConfigs.maxBubbleScale));
     NSLog(@"-------创建泡泡成功-------\n size:%f",bubble.size.width);
 }
 
 - (void)creatBubbleFaildWithBubble:(Bubble *)bubble {
     [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
     [self.emitterManager runAddBubbleFaildEmitterWithPosition:bubble.position];
+    self.bubbleProgess-=(0.2 * (bubble.xScale/GameConfigs.maxBubbleScale));
     NSLog(@"-------创建泡泡失败-------\n size:%f",bubble.size.width);
 }
 
+- (void)setBubbleProgess:(CGFloat)bubbleProgess {
+    
+    bubbleProgess = MAX(0, bubbleProgess);
+    
+    _bubbleProgess = bubbleProgess;
+    if (bubbleProgess>=1) {
+        if(self.onGameNeedRestart) {
+            self.onGameNeedRestart(YES);
+        }
+        return;
+    }
+    [self.bubbleAddBar updateProgress:bubbleProgess animation:YES];
+}
 #pragma mark touch delegate
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     for (UITouch *t in touches) {[self touchDownAtPoint:[t locationInNode:self]];}
@@ -254,6 +280,9 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     levelLabel.position =CGPointMake(self.size.width/2.f+95, self.size.height - kPhysicsWorldInsert.top/2.f-16);
     [self addChild:levelLabel];
     
+    [self setupProgressBar];
+    
+    
 }
 
 - (void)setUpStartGameContent {
@@ -274,6 +303,25 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
         button.texture = [SKTexture textureWithImageNamed:weakSelf.paused?@"game_play":@"game_stop"] ;
     }];
     [self addChild:gameContrlBtn];
+    
+}
+
+- (void)setupProgressBar {
+    
+    CGFloat barHeight = 460;
+    CGFloat barWidth = 34;
+    CGFloat barYPos = 277;
+    
+    self.bubbleAddBar = [GameProgressBar barWithType:GameProgressBarTypeBubbleAdd frame:CGRectMake(51, barYPos, barWidth, barHeight)];
+    [self addChild:self.bubbleAddBar];
+    [self.bubbleAddBar updateProgress:0.f animation:NO];
+    
+    
+    self.timeBar = [GameProgressBar barWithType:GameProgressBarTypeTime frame:CGRectMake(self.size.width - 75, barYPos, barWidth, barHeight)];
+    [self addChild:self.timeBar];
+    [self.timeBar updateProgress:1.f animation:NO];
+    
+    
 }
 
 
