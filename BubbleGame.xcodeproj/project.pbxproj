@@ -33,6 +33,8 @@
 		EC68A55C2235320C00A2F1D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55A2235320C00A2F1D2 /* Assets.xcassets */; };
 		EC68A55E2235375B00A2F1D2 /* BubbleSucceed.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55D2235375B00A2F1D2 /* BubbleSucceed.sks */; };
 		EC68A56022353D1D00A2F1D2 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55F22353D1D00A2F1D2 /* Fire.sks */; };
+		EC68A563223541D300A2F1D2 /* GameLevelLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC68A562223541D300A2F1D2 /* GameLevelLabel.m */; };
+		EC68A5652235493500A2F1D2 /* 04B_25.TTF in Resources */ = {isa = PBXBuildFile; fileRef = EC68A5642235438B00A2F1D2 /* 04B_25.TTF */; };
 		ECD40E6D2234B20E00607DCA /* MianSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ECD40E6C2234B20E00607DCA /* MianSoundManager.m */; };
 		ECF9A1B5222EA82400952DA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1B4222EA82400952DA2 /* AppDelegate.m */; };
 		ECF9A1BC222EA82400952DA2 /* MainGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1BB222EA82400952DA2 /* MainGameScene.m */; };
@@ -78,6 +80,9 @@
 		EC68A55A2235320C00A2F1D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC68A55D2235375B00A2F1D2 /* BubbleSucceed.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BubbleSucceed.sks; sourceTree = "<group>"; };
 		EC68A55F22353D1D00A2F1D2 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
+		EC68A561223541D300A2F1D2 /* GameLevelLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameLevelLabel.h; sourceTree = "<group>"; };
+		EC68A562223541D300A2F1D2 /* GameLevelLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameLevelLabel.m; sourceTree = "<group>"; };
+		EC68A5642235438B00A2F1D2 /* 04B_25.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = 04B_25.TTF; sourceTree = "<group>"; };
 		ECD40E6B2234B20E00607DCA /* MianSoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MianSoundManager.h; sourceTree = "<group>"; };
 		ECD40E6C2234B20E00607DCA /* MianSoundManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MianSoundManager.m; sourceTree = "<group>"; };
 		ECF9A1B0222EA82400952DA2 /* BubbleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubbleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,6 +148,8 @@
 			children = (
 				EC68A5562234F98200A2F1D2 /* GameButton.h */,
 				EC68A5572234F98200A2F1D2 /* GameButton.m */,
+				EC68A561223541D300A2F1D2 /* GameLevelLabel.h */,
+				EC68A562223541D300A2F1D2 /* GameLevelLabel.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -150,6 +157,7 @@
 		ECD40E692234B17F00607DCA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EC68A5642235438B00A2F1D2 /* 04B_25.TTF */,
 				EC68A52A2234E2DD00A2F1D2 /* redball_stop.wav */,
 				EC68A5282234E2DC00A2F1D2 /* bubble_growing.wav */,
 				EC68A52D2234E2DD00A2F1D2 /* button_click.wav */,
@@ -288,6 +296,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC68A5652235493500A2F1D2 /* 04B_25.TTF in Resources */,
 				EC68A56022353D1D00A2F1D2 /* Fire.sks in Resources */,
 				ECF9A1C2222EA82400952DA2 /* Main.storyboard in Resources */,
 				EC68A5252234DB5A00A2F1D2 /* backmusic.wav in Resources */,
@@ -326,6 +335,7 @@
 				ECF9A1BF222EA82400952DA2 /* GameViewController.m in Sources */,
 				EC08295D222FEA6B0033A12B /* GameConfigs.m in Sources */,
 				EC494D54222FF9E0002D98E5 /* UIColor+ColorExtension.m in Sources */,
+				EC68A563223541D300A2F1D2 /* GameLevelLabel.m in Sources */,
 				EC68A5582234F98200A2F1D2 /* GameButton.m in Sources */,
 				EC082953222FC5470033A12B /* Bubble.m in Sources */,
 				ECF9A1CA222EA82500952DA2 /* main.m in Sources */,

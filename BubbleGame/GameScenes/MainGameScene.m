@@ -13,6 +13,7 @@
 #import "MianSoundManager.h"
 #import "GameEmitterManager.h"
 #import "GameButton.h"
+#import "GameLevelLabel.h"
 
 static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 118};
 
@@ -248,6 +249,11 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
                                                [SKAction removeFromParent],
                                                ]]];
     }];
+    
+    GameLevelLabel *levelLabel = [GameLevelLabel levelLabelWithLevel:self.configs.level];
+    levelLabel.position =CGPointMake(self.size.width/2.f+95, self.size.height - kPhysicsWorldInsert.top/2.f-16);
+    [self addChild:levelLabel];
+    
 }
 
 - (void)setUpStartGameContent {
