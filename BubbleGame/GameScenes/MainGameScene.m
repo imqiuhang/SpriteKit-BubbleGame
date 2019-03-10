@@ -10,12 +10,16 @@
 #import "RedBall.h"
 #import "Bubble.h"
 #import "SpinnyNode.h"
+#import "MianSoundManager.h"
+
+static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 118};
 
 @interface MainGameScene()<SKPhysicsContactDelegate>
 
 @property (nonatomic,strong)Bubble *currentGrowthingBubble;
-
 @property (nonatomic)NSInteger randomFlag;
+
+@property (nonatomic,strong)MianSoundManager *soundManager;
 
 @end
 
@@ -57,6 +61,7 @@
         [bubble fadeOut];
         [self creatBubbleFaildWithSize:bubble.size];
         self.currentGrowthingBubble = nil;
+        [self.soundManager playMakeBubbleFaildSoundForByHit];
     }
 }
 
@@ -72,6 +77,8 @@
     self.currentGrowthingBubble = bubble;
     
     self.randomFlag ++;
+    
+    [self.soundManager controlBubbleGrowingSoundWithPlay:YES];
 }
 
 - (void)updateBubbleStausWhenTouchOff {
@@ -85,6 +92,7 @@
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
         [self creatBubbleFaildWithSize:self.currentGrowthingBubble.size];
+        [self.soundManager playMakeBubbleFaildSoundForTooSmall];
     }else {
         [self creatGreatBubbleSucceedWithSize:self.currentGrowthingBubble.size];
     }
@@ -103,7 +111,7 @@
                          [NSValue valueWithCGVector:CGVectorMake(-speed, speed)]];
     
     for(int i=0;i<3;i++) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1*i * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1*i + 3) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             RedBall *redball = [RedBall redBall];
             redball.physicsBody.collisionBitMask = GameConfigs.redBallCollisionBitMask;
             redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
@@ -144,10 +152,12 @@
 
 #pragma mark - grade
 - (void)creatGreatBubbleSucceedWithSize:(CGSize)size {
+     [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
     NSLog(@"-------创建泡泡成功-------\n size:%f",size.width);
 }
 
 - (void)creatBubbleFaildWithSize:(CGSize)size {
+    [self.soundManager controlBubbleGrowingSoundWithPlay:NO];
     NSLog(@"-------创建泡泡失败-------\n size:%f",size.width);
 }
 
@@ -173,11 +183,18 @@
     
     self.physicsWorld.gravity = CGVectorMake(0, -9.8);
     self.physicsWorld.contactDelegate = self;
-    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:CGRectMake(kPhysicsWorldInsert.left, kPhysicsWorldInsert.top, self.size.width-kPhysicsWorldInsert.left-kPhysicsWorldInsert.right, self.size.height-kPhysicsWorldInsert.top-kPhysicsWorldInsert.bottom)];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self setupRedballs];
-    });
+    self.soundManager = [[MianSoundManager alloc] initWithScene:self];
+    [self.soundManager controlBgMusicWithPlay:YES];
+    
+    SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];
+    bgImageNode.size = self.size;
+    bgImageNode.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+    [self addChild:bgImageNode];
+    
+    [self setupRedballs];
+    
 }
 
 @end
