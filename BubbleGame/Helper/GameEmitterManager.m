@@ -19,11 +19,14 @@
     return self;
 }
 
+//例子系统可以直接通过属性赋值 或者通过可视化的操作
 - (void)runAddBubbleFaildEmitterWithPosition:(CGPoint)pos {
     
     SKEmitterNode* emnode=[SKEmitterNode nodeWithFileNamed:@"BubbleFaild.sks"];
     [self.relateScene addChild:emnode];
     emnode.position = pos;
+    
+    //action也可以通过可视化的操作来生成
     [emnode runAction:[SKAction sequence:@[[SKAction waitForDuration:2.f],
                                            [SKAction fadeOutWithDuration:0.5],
                                            [SKAction removeFromParent]]]];

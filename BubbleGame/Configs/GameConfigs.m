@@ -27,11 +27,11 @@
 }
 
 + (uint32_t)bubbleCollisionBitMask {
-    return 0x00000001;
+    return 0x01;
 }
 
 + (uint32_t)redBallCollisionBitMask {
-    return 0x00000002;
+    return 0x02;
 }
 
 + (CGFloat)redBallSpeedNormal {

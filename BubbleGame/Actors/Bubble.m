@@ -44,7 +44,7 @@ static NSString *const kGrowthingAnimationName = @"action_buuble_self_growthing"
     [bubble setScale:0.f];
     bubble.physicsBody.affectedByGravity = NO;
     bubble.physicsBody.mass = 500;//质量是红球的50倍
-    bubble.physicsBody.restitution = 0.2;//动量传递衰减80%（即看着弹性很小,设置为0碰撞后可以一直弹）
+    bubble.physicsBody.restitution = 0.2;//动量传递衰减80%（即看着弹性很小,设置为1碰撞后可以一直弹）
     bubble.physicsBody.angularDamping = 0.4;
     bubble.physicsBody.linearDamping = 0.3f;
     

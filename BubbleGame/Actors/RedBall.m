@@ -21,7 +21,7 @@
     redBall.physicsBody.mass = 10;//质量 10kg
     redBall.physicsBody.angularDamping = 0.f;//角动量摩擦力
     redBall.physicsBody.linearDamping = 0.f;//线性摩擦力
-    redBall.physicsBody.restitution = 1.f;//反弹的动量
+    redBall.physicsBody.restitution = 1.f;//反弹的动量 1即无限反弹，不丢失动量，相当于一个永动机=。=
     redBall.physicsBody.friction = 0.f;//摩擦力
     redBall.physicsBody.allowsRotation = YES;//允许受到角动量
     redBall.physicsBody.usesPreciseCollisionDetection = YES;//独立计算碰撞
@@ -35,9 +35,11 @@
     }
     _effectType = effectType;
     
+    //也可以通过action动画b换图
     self.texture  = [SKTexture textureWithImageNamed:effectType==RedBallEffectTypeIceing?@"ball_ice":@"ball"];
     
     //碰撞后拿出原有的角速度的方向 赋值到新速度，方向不变 d速度减半或者恢复
+    //当然也可以角速度直接操作 angularVelocity
     CGVector originalVelocity = self.physicsBody.velocity ;
     CGFloat dxv = originalVelocity.dx>=0?1:-1;
     CGFloat dyv = originalVelocity.dy>=0?1:-1;

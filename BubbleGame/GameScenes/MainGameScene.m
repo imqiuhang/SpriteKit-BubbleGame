@@ -107,6 +107,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     }
     
     [self.currentGrowthingBubble stopGrowthing];
+    //假如创建的是冰球，我们让他受到重力影响 看下效果
     self.currentGrowthingBubble.physicsBody.affectedByGravity = self.currentGrowthingBubble.bubbleType==BubbleTypeIce;
     if (self.currentGrowthingBubble.xScale<GameConfigs.minBubble2Stay) {
         [self.currentGrowthingBubble fadeOut];
@@ -125,6 +126,20 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     CGFloat speed = GameConfigs.redBallSpeedNormal;
     
+/*  -------------> △vx
+    | .        /
+    |    .    /
+    |       ./
+    |       /  垂直方向是角速度,也就是速度的向量
+    |      /
+    |     /
+    |    /
+    |   /
+    |  /
+    | /
+   △vy
+  */
+    
     NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(speed, speed)],
                          [NSValue valueWithCGVector:CGVectorMake(speed, -speed)],
                          [NSValue valueWithCGVector:CGVectorMake(-speed, speed)],
@@ -137,7 +152,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
             redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
             redball.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
             [self addChild:redball];
-            //可以通过施加一个推力（牛顿）或者直接赋值速度，直接赋值速度比较方便，推力需要计算
+            //可以通过施加一个推力（牛顿）或者j冲量 或者直接赋值速度，直接赋值速度比较方便，推力需要计算
 //            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
             redball.physicsBody.velocity = [vectors[i%vectors.count] CGVectorValue];
         });
@@ -153,6 +168,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 }
 
 #pragma mark  game loop
+//每隔0.01秒调用 currentTime 是秒 精确到后三位 例如1.002秒
 -(void)update:(CFTimeInterval)currentTime {
     
     if (_isGameStart) {
