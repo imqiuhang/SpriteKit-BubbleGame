@@ -30,12 +30,12 @@
 		EC68A5502234EE5300A2F1D2 /* GameEmitter.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC68A54E2234EE5300A2F1D2 /* GameEmitter.xcassets */; };
 		EC68A5582234F98200A2F1D2 /* GameButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EC68A5572234F98200A2F1D2 /* GameButton.m */; };
 		EC68A55B2235320C00A2F1D2 /* Snow.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC68A5592235320C00A2F1D2 /* Snow.sks */; };
-		EC68A55C2235320C00A2F1D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55A2235320C00A2F1D2 /* Assets.xcassets */; };
 		EC68A55E2235375B00A2F1D2 /* BubbleSucceed.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55D2235375B00A2F1D2 /* BubbleSucceed.sks */; };
 		EC68A56022353D1D00A2F1D2 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC68A55F22353D1D00A2F1D2 /* Fire.sks */; };
 		EC68A563223541D300A2F1D2 /* GameLevelLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC68A562223541D300A2F1D2 /* GameLevelLabel.m */; };
 		EC68A5652235493500A2F1D2 /* 04B_25.TTF in Resources */ = {isa = PBXBuildFile; fileRef = EC68A5642235438B00A2F1D2 /* 04B_25.TTF */; };
 		EC6ADA5E22354D92008A5212 /* GameProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6ADA5D22354D92008A5212 /* GameProgressBar.m */; };
+		EC6ADA652235ED9F008A5212 /* GameSucceed.sks in Resources */ = {isa = PBXBuildFile; fileRef = EC6ADA632235ED9F008A5212 /* GameSucceed.sks */; };
 		ECD40E6D2234B20E00607DCA /* MianSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ECD40E6C2234B20E00607DCA /* MianSoundManager.m */; };
 		ECF9A1B5222EA82400952DA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1B4222EA82400952DA2 /* AppDelegate.m */; };
 		ECF9A1BC222EA82400952DA2 /* MainGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF9A1BB222EA82400952DA2 /* MainGameScene.m */; };
@@ -78,7 +78,6 @@
 		EC68A5562234F98200A2F1D2 /* GameButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameButton.h; sourceTree = "<group>"; };
 		EC68A5572234F98200A2F1D2 /* GameButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameButton.m; sourceTree = "<group>"; };
 		EC68A5592235320C00A2F1D2 /* Snow.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Snow.sks; sourceTree = "<group>"; };
-		EC68A55A2235320C00A2F1D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC68A55D2235375B00A2F1D2 /* BubbleSucceed.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BubbleSucceed.sks; sourceTree = "<group>"; };
 		EC68A55F22353D1D00A2F1D2 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
 		EC68A561223541D300A2F1D2 /* GameLevelLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameLevelLabel.h; sourceTree = "<group>"; };
@@ -86,6 +85,7 @@
 		EC68A5642235438B00A2F1D2 /* 04B_25.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = 04B_25.TTF; sourceTree = "<group>"; };
 		EC6ADA5C22354D92008A5212 /* GameProgressBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameProgressBar.h; sourceTree = "<group>"; };
 		EC6ADA5D22354D92008A5212 /* GameProgressBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameProgressBar.m; sourceTree = "<group>"; };
+		EC6ADA632235ED9F008A5212 /* GameSucceed.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameSucceed.sks; sourceTree = "<group>"; };
 		ECD40E6B2234B20E00607DCA /* MianSoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MianSoundManager.h; sourceTree = "<group>"; };
 		ECD40E6C2234B20E00607DCA /* MianSoundManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MianSoundManager.m; sourceTree = "<group>"; };
 		ECF9A1B0222EA82400952DA2 /* BubbleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubbleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,12 +184,12 @@
 				ECD40E6C2234B20E00607DCA /* MianSoundManager.m */,
 				EC68A5382234EB5B00A2F1D2 /* GameEmitterManager.h */,
 				EC68A5392234EB5B00A2F1D2 /* GameEmitterManager.m */,
-				EC68A54E2234EE5300A2F1D2 /* GameEmitter.xcassets */,
 				EC68A54D2234EE5300A2F1D2 /* BubbleFaild.sks */,
 				EC68A5592235320C00A2F1D2 /* Snow.sks */,
-				EC68A55A2235320C00A2F1D2 /* Assets.xcassets */,
 				EC68A55D2235375B00A2F1D2 /* BubbleSucceed.sks */,
+				EC6ADA632235ED9F008A5212 /* GameSucceed.sks */,
 				EC68A55F22353D1D00A2F1D2 /* Fire.sks */,
+				EC68A54E2234EE5300A2F1D2 /* GameEmitter.xcassets */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -305,6 +305,7 @@
 				EC68A56022353D1D00A2F1D2 /* Fire.sks in Resources */,
 				ECF9A1C2222EA82400952DA2 /* Main.storyboard in Resources */,
 				EC68A5252234DB5A00A2F1D2 /* backmusic.wav in Resources */,
+				EC6ADA652235ED9F008A5212 /* GameSucceed.sks in Resources */,
 				EC68A5312234E2DD00A2F1D2 /* bubble_growing.wav in Resources */,
 				EC68A5302234E2DD00A2F1D2 /* bubble_made_faild_byhit.wav in Resources */,
 				EC68A55E2235375B00A2F1D2 /* BubbleSucceed.sks in Resources */,
@@ -318,7 +319,6 @@
 				EC68A5342234E2DD00A2F1D2 /* game_succeed.wav in Resources */,
 				EC68A54F2234EE5300A2F1D2 /* BubbleFaild.sks in Resources */,
 				EC68A5332234E2DD00A2F1D2 /* redball_stop.wav in Resources */,
-				EC68A55C2235320C00A2F1D2 /* Assets.xcassets in Resources */,
 				ECF9A1C7222EA82500952DA2 /* LaunchScreen.storyboard in Resources */,
 				EC68A5362234E2DD00A2F1D2 /* button_click.wav in Resources */,
 				EC494D4E222FF516002D98E5 /* Actions.sks in Resources */,

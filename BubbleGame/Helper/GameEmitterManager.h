@@ -21,6 +21,7 @@
 - (void)runAddBubbleSucceedEmitterWithNode:(SKNode *)node;
 - (void)addSnowWithEdge:(UIEdgeInsets)edge;
 - (void)removeSnow;
+- (void)runGameSucceed;
 
 + (void)addFireForNode:(SKNode *)node;
 

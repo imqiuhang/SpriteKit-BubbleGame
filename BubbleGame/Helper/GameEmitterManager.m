@@ -41,6 +41,15 @@
     [self.relateScene addChild:emnode];
 }
 
+- (void)runGameSucceed {
+    SKEmitterNode* emnode=[SKEmitterNode nodeWithFileNamed:@"GameSucceed.sks"];
+    emnode.position = CGPointMake(self.relateScene.size.width/2.f, self.relateScene.size.height/2.f);
+    [emnode runAction:[SKAction sequence:@[[SKAction waitForDuration:2.f],
+                                           [SKAction fadeOutWithDuration:1.0],
+                                           [SKAction removeFromParent]]]];
+    [self.relateScene addChild:emnode];
+}
+
 - (void)addSnowWithEdge:(UIEdgeInsets)edge {
     [self removeSnow];
     _snow = [SKEmitterNode nodeWithFileNamed:@"Snow.sks"];

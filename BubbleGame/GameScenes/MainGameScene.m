@@ -252,19 +252,19 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     self.soundManager = [[MianSoundManager alloc] initWithScene:self];
     [self.soundManager controlBgMusicWithPlay:YES];
-    
-    if (self.configs.isWin) {
-        [self.soundManager playGameSucceedSound];
-    }else if (!self.configs.isFirst) {
-        [self.soundManager playGameFaildSound];
-    }
-    
     self.emitterManager = [[GameEmitterManager alloc] initWithScene:self];
-    
+
     SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];
     bgImageNode.size = self.size;
     bgImageNode.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
     [self addChild:bgImageNode];
+    
+    if (self.configs.isWin) {
+        [self.soundManager playGameSucceedSound];
+        [self.emitterManager runGameSucceed];
+    }else if (!self.configs.isFirst) {
+        [self.soundManager playGameFaildSound];
+    }
     
     [self.emitterManager addSnowWithEdge:kPhysicsWorldInsert];
     
@@ -275,6 +275,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     [self addChild:startGameBtn];
     WeakSelf;
     [startGameBtn setOnSelectCallback:^(GameButton *button) {
+        button.userInteractionEnabled = NO;
         [weakSelf setUpStartGameContent];
         [button runAction:[SKAction sequence:@[
                                                [SKAction fadeOutWithDuration:2.f],
