@@ -253,6 +253,12 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     self.soundManager = [[MianSoundManager alloc] initWithScene:self];
     [self.soundManager controlBgMusicWithPlay:YES];
     
+    if (self.configs.isWin) {
+        [self.soundManager playGameSucceedSound];
+    }else if (!self.configs.isFirst) {
+        [self.soundManager playGameFaildSound];
+    }
+    
     self.emitterManager = [[GameEmitterManager alloc] initWithScene:self];
     
     SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];

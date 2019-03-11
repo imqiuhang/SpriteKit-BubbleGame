@@ -67,5 +67,13 @@
     [self.relateScene runAction:[SKAction playSoundFileNamed:@"game_readyGo.wav" waitForCompletion:NO]];
 }
 
+- (void)playGameSucceedSound {
+    [self.relateScene runAction:[SKAction playSoundFileNamed:@"game_succeed.wav" waitForCompletion:NO]];
+}
+
+- (void)playGameFaildSound {
+    [self.relateScene runAction:[SKAction playSoundFileNamed:@"game_faild.wav" waitForCompletion:NO]];
+}
+
 
 @end

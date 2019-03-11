@@ -22,6 +22,8 @@
 - (void)playMakeBubbleFaildSoundForTooSmall;
 - (void)playMakeBubbleFaildSoundForByHit;
 - (void)playReadyGoSound;
+- (void)playGameSucceedSound;
+- (void)playGameFaildSound;
 
 
 @end
