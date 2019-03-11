@@ -24,6 +24,7 @@
 - (void)playReadyGoSound;
 - (void)playGameSucceedSound;
 - (void)playGameFaildSound;
+- (void)playNomuchTimeSound;
 
 
 @end

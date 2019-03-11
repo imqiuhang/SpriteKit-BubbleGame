@@ -171,7 +171,11 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
         }
         return;
     }
-    [self.timeBar updateProgress:1.00f-(gameDuration/GameConfigs.totalTimeForPass) animation:NO];
+    CGFloat progress = 1.00f-(gameDuration/GameConfigs.totalTimeForPass);
+    [self.timeBar updateProgress:progress animation:NO];
+    if (progress<=GameConfigs.nomuchTimeRate) {
+        [self.soundManager playNomuchTimeSound];
+    }
 }
 
 #pragma mark - touch control
@@ -246,17 +250,25 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
 #pragma mark - setup
 - (void)setupGamePrepareContent {
     
+    //因为坐标系是从下往上的，和现实世界相反，所以重力是负数
     self.physicsWorld.gravity = CGVectorMake(0, -9.8);
+    
+    //设置世界的碰撞代理
     self.physicsWorld.contactDelegate = self;
+    
+    //设置这个世界的边界，任何刚体都无法通过力的作用逃离这个世界的边界
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:CGRectMake(kPhysicsWorldInsert.left, kPhysicsWorldInsert.top, self.size.width-kPhysicsWorldInsert.left-kPhysicsWorldInsert.right, self.size.height-kPhysicsWorldInsert.top-kPhysicsWorldInsert.bottom)];
     
+    //初始化声音，例子系统
     self.soundManager = [[MianSoundManager alloc] initWithScene:self];
     [self.soundManager controlBgMusicWithPlay:YES];
     self.emitterManager = [[GameEmitterManager alloc] initWithScene:self];
 
     SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];
     bgImageNode.size = self.size;
+    //position是物体的中间点
     bgImageNode.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+    //addChild，和addSubView类似
     [self addChild:bgImageNode];
     
     if (self.configs.isWin) {
@@ -268,6 +280,7 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     
     [self.emitterManager addSnowWithEdge:kPhysicsWorldInsert];
     
+    //开始游戏的按钮
     GameButton *startGameBtn = [GameButton buttonWithImageNamed:@"startGame"];
     startGameBtn.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
     [startGameBtn setScale:3.f];
@@ -288,7 +301,6 @@ static  UIEdgeInsets const kPhysicsWorldInsert = (UIEdgeInsets){125, 118, 115, 1
     [self addChild:levelLabel];
     
     [self setupProgressBar];
-    
     
 }
 

@@ -43,7 +43,7 @@
 }
 
 + (CGFloat)nomuchTimeRate {
-    return 0.35;
+    return 0.5;
 }
 
 + (CGFloat)maxBubbleAddForLevel:(NSInteger)level {
