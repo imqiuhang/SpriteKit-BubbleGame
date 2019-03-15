@@ -1,5 +1,5 @@
 <!--可以在 https://macdown.uranusjr.com/  下载Markdown支持工具Macdown-->
-### iOS 2D游戏框架-SpriteKit的一些实践过程
+### iOS 2D游戏框架-SpriteKit的一些实践过程(完成50%)
 ###### @author [imqiuhang](https://github.com/imqiuhang)
 
 
