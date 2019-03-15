@@ -1,6 +1,11 @@
 <!--可以在 https://macdown.uranusjr.com/  下载Markdown支持工具Macdown-->
-### iOS 2D游戏框架-SpriteKit的一些实践过程(完成50%)
+### iOS 2D游戏框架-SpriteKit的一些实践过程(文章完成50%)
 ###### @author [imqiuhang](https://github.com/imqiuhang)
+
+##### 传送门🚪 imqiuhang其他文章
+1. [CoreAnimation深入学习的愉快探讨](https://github.com/imqiuhang/CoreAnimationLearning/blob/master/README.md)
+2. ...努力定时更新中...^_^
+
 
 
 ### 📣前言
@@ -223,9 +228,7 @@
 <br>
 <br>
 <br>
-##### 📚imqiuhang其他文章
-1. [CoreAnimation深入学习的愉快探讨](https://github.com/imqiuhang/CoreAnimationLearning/blob/master/README.md)
-2. ...努力整理中...
+
 
 
 
