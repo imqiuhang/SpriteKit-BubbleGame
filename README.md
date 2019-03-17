@@ -1,5 +1,5 @@
 <!--可以在 https://macdown.uranusjr.com/  下载Markdown支持工具Macdown-->
-### iOS 2D游戏框架-SpriteKit的一些实践过程(文章完成50%)
+### iOS 2D游戏框架-SpriteKit的一些实践过程
 ###### @author [imqiuhang](https://github.com/imqiuhang)
 
 ##### 传送门🚪 imqiuhang其他文章
@@ -41,13 +41,13 @@
 --- 
 
 ### 🔍 例行先看下SpriteKit目录
-###### ✅表示本文涉及到，‼️表示重点探讨
+###### ✅表示本文涉及到，❤️表示重点探讨
 <!--CoreAnimation头文件包含-->
 
 ```objc
-#import <SpriteKit/SKScene.h> ‼️
+#import <SpriteKit/SKScene.h> ❤️
 #import <SpriteKit/SKCameraNode.h>
-#import <SpriteKit/SKNode.h>‼️
+#import <SpriteKit/SKNode.h>❤️
 #import <SpriteKit/SKSpriteNode.h>✅
 #import <SpriteKit/SKEmitterNode.h>✅
 #import <SpriteKit/SKShapeNode.h>✅
@@ -62,7 +62,7 @@
 #import <SpriteKit/SK3DNode.h>
 #import <SpriteKit/SKTransformNode.h>
 #import <SpriteKit/SKRegion.h>
-#import <SpriteKit/SKView.h>‼️
+#import <SpriteKit/SKView.h>❤️
 #import <SpriteKit/SKTransition.h>
 #import <SpriteKit/SKShader.h>
 #import <SpriteKit/SKUniform.h>
@@ -81,11 +81,11 @@
 #import <SpriteKit/SKConstraint.h>
 #import <SpriteKit/SKReachConstraints.h>
 
-#import <SpriteKit/SKAction.h>‼️
+#import <SpriteKit/SKAction.h>❤️
 
-#import <SpriteKit/SKPhysicsBody.h>‼️
+#import <SpriteKit/SKPhysicsBody.h>❤️
 #import <SpriteKit/SKPhysicsJoint.h>
-#import <SpriteKit/SKPhysicsWorld.h>‼️
+#import <SpriteKit/SKPhysicsWorld.h>❤️
 
 ```
 
@@ -192,16 +192,12 @@
 ### 了解了这些基本概念后，接下来，我们正式开始开发这个泡泡游戏。（游戏GIF以及规则解释在最上面）
 
 
-> 首先我们新建一个项目,项目类型选择Game,game technology选择SpriteKit，如图
-
-@TODO新建项目的两张图
-
-
+> 首先我们新建一个项目,项目类型选择Game,game technology选择
 > 我们可以看到系统为我们自动创建的一些文件如图
 
-@TODO新建项目后的图
+![创建项目](https://upload-images.jianshu.io/upload_images/3058688-e07ec43b042b866d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
-> 我们可以看到系统为我们自动创建的GameViewController，对应的XIB中我们可以看到这个View是一个SKView
+> 系统为我们自动创建的GameViewController，对应的XIB中我们可以看到这个View是一个SKView
 
 
 
@@ -222,18 +218,418 @@
 这样我们就可以开始在我们的`MainGameScene`中开始我们的表演了。
 
 
+> 首先刚才我们说游戏都是在scene中进行的，那么我们现在GameViewController中推入我们自己的MainGameScene
 
 
 
+```objc
 
+@interface GameViewController ()
+
+@property (nonatomic,strong)MainGameScene *scene;
+@property (nonatomic)NSInteger currentLevel;
+
+@end
+
+@implementation GameViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupGameWithConfig:MainGameSceneCreatConfig.firstConfig];
+}
+
+- (void)setupGameWithConfig:(MainGameSceneCreatConfig *)config {
+    
+    [self.scene removeFromParent];
+    self.scene = nil;
+    
+    self.scene = [MainGameScene sceneWithSize:self.view.bounds.size config:config];
+    self.scene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    SKView *skView = (SKView *)self.view;
+    [skView presentScene:self.scene];
+    
+    //debug
+    skView.showsFPS = YES;
+    skView.showsNodeCount = YES;
+    
+    //简单关卡控制
+    WeakSelf
+    [self.scene setOnGameNeedRestart:^(BOOL isWin) {
+        if (isWin) {
+            weakSelf.currentLevel++;
+        }
+        MainGameSceneCreatConfig *config = [MainGameSceneCreatConfig new];
+        config.isFirst = NO;
+        config.level = weakSelf.currentLevel;
+        config.isWin = isWin;
+        [weakSelf setupGameWithConfig:config];
+    }];
+}
+
+@end
+
+```
+
+> 细节我们可以先忽略，这里主要是在viewDidLoad中setupGameWithConfig初始化一次我们的Main Scene,然后通过SKView presentScene来将我们的scene推到上层显示，然后我们监听了Main Scene中闯关成功和失败的回调，重新通过setupGameWithConfig重新生成新的scene并present。
+
+
+##### 因此，我们完成了我们的第一步，成功推入我们的游戏界面，下一步我们便开始游戏的开发。
+
+> 首先，我们进入到MainGameScene的开发中，首先我们也需要构建一下我们的游戏场景，根据我们的规则，我们的泡泡或者红球都是不能超出边界范围的，碰撞会反弹，切冰球会受到重力的影响，这一切说明我们的游戏背景将会是一个封闭的，带有重力的矩形，那么我们根据需求在MainGameScene初始化一下我们的scene的物理世界。
+
+
+
+```objc
+//因为坐标系是从下往上的，和现实世界相反，所以重力是负数
+    self.physicsWorld.gravity = CGVectorMake(0, -9.8);
+    
+    //设置世界的碰撞代理
+    self.physicsWorld.contactDelegate = self;
+    
+    //设置这个世界的边界，任何刚体都无法通过力的作用逃离这个世界的边界
+    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:CGRectMake(kPhysicsWorldInsert.left, kPhysicsWorldInsert.top, self.size.width-kPhysicsWorldInsert.left-kPhysicsWorldInsert.right, self.size.height-kPhysicsWorldInsert.top-kPhysicsWorldInsert.bottom)];
+    
+    
+```
+> 可以看到，一个Scene中都对应着一个physicsWorld，我们设置了physicsWorld的重力，以及碰撞代理和物理世界的边界，这里我们选择是矩形边界。
+
+##### 现在，世界有了，是不是差点背景音乐？
+
+> 在上面我们也说到了声音的3种播放方式，那么一般像背景音乐这种需要较多控制和持续播放的我们选择add 声音node的方式，一般像一次的音效我们使用run一个action的方法，集体我们可以在MianSoundManager这个类中查看，这里列举一下这两种的播放
+
+
+```objc
+
+//我们在MainGameScene刚才初始化的地方增加声音的初始化
+
+//初始化声音，例子系统
+    self.soundManager = [[MianSoundManager alloc] initWithScene:self];
+    [self.soundManager controlBgMusicWithPlay:YES];
+
+
+//以下是MianSoundManager的方法
+- (void)controlBgMusicWithPlay:(BOOL)play {
+
+    if (play) {
+        [self controlBgMusicWithPlay:NO];
+        self.backgroundAudio = [[SKAudioNode alloc] initWithFileNamed:@"backmusic.wav"];
+        self.backgroundAudio.autoplayLooped = YES;
+        [self.relateScene addChild:self.backgroundAudio];
+    }else {
+        [self.backgroundAudio removeFromParent];
+        self.backgroundAudio = nil;
+    }
+}
+
+//播放进入游戏 ready go的音效
+- (void)playReadyGoSound {
+    [self.relateScene runAction:[SKAction playSoundFileNamed:@"game_readyGo.wav" waitForCompletion:NO]];
+}
+
+```
+> 上面列举了播放背景声音和音效的两种不同方法。其中self.relateScene使我们调用方也就是MainGameScene传进去的，也就是方法1播放背景声音其实是通过向MainGameScene中add了一个声音node，方法2种则是通过MainGameScene run了有个Sound action。
+
+
+##### 至此，物理世界和音效我们都已经完成了，那么我们在增加一个背景图以及开始游戏的按钮
+
+```objc
+
+
+    SKSpriteNode *bgImageNode = [[SKSpriteNode alloc] initWithImageNamed:@"background"];
+    bgImageNode.size = self.size;
+    //position是物体的中间点
+    bgImageNode.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+    //addChild，和addSubView类似
+    [self addChild:bgImageNode];
+    
+    GameButton *startGameBtn = [GameButton buttonWithImageNamed:@"startGame"];
+    startGameBtn.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+    [startGameBtn setScale:3.f];
+    [GameEmitterManager addFireForNode:startGameBtn];
+    [self addChild:startGameBtn];
+    WeakSelf;
+    [startGameBtn setOnSelectCallback:^(GameButton *button) {
+        button.userInteractionEnabled = NO;
+        [weakSelf setUpStartGameContent];
+        [button runAction:[SKAction sequence:@[
+                                               [SKAction fadeOutWithDuration:2.f],
+                                               [SKAction removeFromParent],
+                                               ]]];
+    }];
+
+```
+
+> 至于背景图我们没有特别的，只是add了一个图片node而已，而游戏button我们则需要自己稍加处理一下，因为游戏中没有现成的按钮可以提供给我们使用，但是一个node是继承自UIResponder,因为我们可以继承一个图片node，然后重新touch相关的UIResponder方法，来模拟一个按钮，具体可以看GameButton中，这里我只是在touchesBegan 方法里直接回调，如果想要更好的交互，可以参考UIButton的api,增加各种手势以及状态的回调。
+
+
+##### 细心的你一定会发现背景在下雪，已经开始按钮在冒火，这其实是框架给我们提供了非常好用的粒子系统，新建一个例子系统，我们可以非常方便的通过可视化界面随意调节我们的粒子效果
+
+> 我们file - new - file,拉到比较下面的位置 选择sprite particle file,选择例如下雨下雪烟雾等的其中一个，新建一个粒子文件。选择刚才的粒子文件，我们可以看到xcode给我们提供了比较丰富的可视化操作，当然这些都有对应的属性通过代码设置，在粒子系统里，我们通过position range，lifetime speed range等的作用设置密度和范围的发小。
+
+![](https://upload-images.jianshu.io/upload_images/3058688-fcda9c522344ae53.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
+
+```objc
+
+//我们通过在我们的按钮node上add一个粒子node
++ (void)addFireForNode:(SKNode *)node {
+    
+    SKEmitterNode *fire = [SKEmitterNode nodeWithFileNamed:@"Fire.sks"];
+    fire.position =  CGPointMake(0, 16);
+    
+    [node addChild:fire];
+}
+
+
+```
+
+##### 以上都是一些游戏的附属相关的开始，那么现在我们的主角应该登场，也就是我们的红球redball和泡泡bubble，那么我们抽象一下主角的模型，并且在初始化的赋值一些物理属性，首先我们看红球。
+
+```objc
+#import <SpriteKit/SpriteKit.h>
+#import "CommUtil.h"
+#import "GameConfigs.h"
+
+typedef NS_ENUM(NSUInteger, RedBallEffectType) {
+    RedBallEffectTypeNone,
+    RedBallEffectTypeIceing,
+};
+
+@interface RedBall : SKSpriteNode
+
+@property (nonatomic,readwrite)RedBallEffectType effectType;
+
+//random
++ (instancetype)redBall;
+
+@end
+
+
+#import "RedBall.h"
+
+@implementation RedBall
+
++ (instancetype)redBall {
+    
+    RedBall *redBall = [RedBall spriteNodeWithImageNamed:@"ball"];
+    [redBall setScale:5];
+    redBall.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:redBall.size.width/2.f];
+    
+//------------------------init configs---------------------------------
+    redBall.physicsBody.affectedByGravity = NO;//不受重力影响
+    redBall.physicsBody.mass = 10;//质量 10kg
+    redBall.physicsBody.angularDamping = 0.f;//角动量摩擦力
+    redBall.physicsBody.linearDamping = 0.f;//线性摩擦力
+    redBall.physicsBody.restitution = 1.f;//反弹的动量 1即无限反弹，不丢失动量，相当于一个永动机=。=
+    redBall.physicsBody.friction = 0.f;//摩擦力
+    redBall.physicsBody.allowsRotation = YES;//允许受到角动量
+    redBall.physicsBody.usesPreciseCollisionDetection = YES;//独立计算碰撞
+    
+    return redBall;
+}
+
+- (void)setEffectType:(RedBallEffectType)effectType {
+    if (effectType==_effectType) {
+        return;
+    }
+    _effectType = effectType;
+    
+    //也可以通过action动画b换图
+    self.texture  = [SKTexture textureWithImageNamed:effectType==RedBallEffectTypeIceing?@"ball_ice":@"ball"];
+    
+    //碰撞后拿出原有的角速度的方向 赋值到新速度，方向不变 d速度减半或者恢复
+    //当然也可以角速度直接操作 angularVelocity
+    CGVector originalVelocity = self.physicsBody.velocity ;
+    CGFloat dxv = originalVelocity.dx>=0?1:-1;
+    CGFloat dyv = originalVelocity.dy>=0?1:-1;
+    CGFloat v = effectType==RedBallEffectTypeIceing?GameConfigs.redBallSpeedIce:GameConfigs.redBallSpeedNormal;
+    self.physicsBody.velocity = CGVectorMake(v*dxv, v*dyv);
+}
+
+@end
+
+
+```
+> 以上我们定义了红球的类型，普通已经减速效果，我们先看红球的初始化，红球其实也是一个图片node，和我们的背景图或者按钮没有什么差别而physicsBody才是红球加入到物理世界的最重要的条件，按照上面我们说的，我们给红球赋值一个.physicsBody，设置质量等，然后我们设置physicsBody.restitution = 1.f，也就是没有衰减的弹性，这样红球碰到泡泡或者朋友我们游戏边界的时候就能原速度返回了，这里红球的质量是10。  在下面setEffectType的方法中，我们判定红球是否受到了减速，如果是我们则取出他的速度，减少一半。但是方向不变（这个是碰撞后调用的，所以方向什么的碰撞引擎已经给我们做好了，我们只需要将速度减半）
+
+
+##### 再来看下bubble
+
+```objc
+
++ (instancetype)bubbleWithType:(BubbleType)bubbleType {
+   Bubble *bubble =  bubbleType==BubbleTypeNormal?[self spriteNodeWithImageNamed:@"bubble"]:[self spriteNodeWithImageNamed:@"bubble_ice"];
+    
+    bubble.bubbleType = bubbleType;
+    bubble.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:bubble.size.width/2.f];
+    [bubble setScale:0.f];
+    bubble.physicsBody.affectedByGravity = NO;
+    bubble.physicsBody.mass = 500;//质量是红球的50倍
+    bubble.physicsBody.restitution = 0.2;//动量传递衰减80%（即看着弹性很小,设置为1碰撞后可以一直弹）
+    bubble.physicsBody.angularDamping = 0.4;
+    bubble.physicsBody.linearDamping = 0.3f;
+    
+    return bubble;
+}
+
+
+- (void)fadeOut {
+    [self runAction:[SKAction sequence:@[
+                                         [SKAction fadeOutWithDuration:0.5],
+                                         [SKAction removeFromParent],
+                                         ]]];
+}
+
+- (void)beganGrowthingWithTargetScale:(CGFloat)scale duration:(NSTimeInterval)duration{
+    [self stopGrowthing];
+    _growthing = YES;
+    [self runAction:[SKAction scaleTo:scale duration:duration] withKey:kGrowthingAnimationName];
+}
+
+- (void)stopGrowthing {
+    _growthing = NO;
+    [self removeActionForKey:kGrowthingAnimationName];
+}
+
+```
+> 我们先忽略其他无关的代码，首先创建bubble，我们可以看到bubble的质量为500，而红球我们刚才设置的是10，所以bubble被红球碰撞后会有微量的偏移（其实都设置密度会比较好，这样红球撞到不同大小的bubble会出现不同的位移变化更加逼真，这里我们为了方便），在来看下`beganGrowthingWithTargetScale`方法，这个方法其实是在mianScene中点击创建bubble调用的，也就是bubble的增大我们是通过给bubble run一个scale的action来达到，这样也达到了很多我们想要的效果，1是变大，而是有个5秒的过程，3是因为scale是指定的，所以当达到最大的时候手指还按着就不会在变大了，省去了我们人工判断的过程。再看下`fadeOut `方法，其实就是bubble在生成过程被红球碰到后的消失过程，可以看到我们通过嵌套了几个action，线性执行。
+
+
+##### bubble和redball我们都已经完成，那么就是在开始游戏后生成红球开始运动，按钮在点击屏幕的时候创建红球。并且开始倒计时。细节demo里都有，我们只讲几个重要的方法。
+
+##### 1是红球的运动，我们上面也说了很多种使刚体动起来的方法，其中我们可以通过直接赋值速度的方法最快达到
+
+```objc
+
+#pragma Mark- redball
+- (void)setupRedballs {
+    
+    CGFloat speed = GameConfigs.redBallSpeedNormal;
+    
+/*  -------------> △vx
+    | .        /
+    |    .    /
+    |       ./
+    |       /  垂直方向是角速度,也就是速度的向量
+    |      /
+    |     /
+    |    /
+    |   /
+    |  /
+    | /
+   △vy
+  */
+    
+    NSArray *vectors = @[[NSValue valueWithCGVector:CGVectorMake(speed, speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(speed, -speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(-speed, speed)],
+                         [NSValue valueWithCGVector:CGVectorMake(-speed, -speed)]];
+    
+    for(int i=0;i<3+self.configs.level;i++) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((0.5*i + 1) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            RedBall *redball = [RedBall redBall];
+            redball.physicsBody.collisionBitMask = GameConfigs.redBallCollisionBitMask;
+            redball.physicsBody.contactTestBitMask = GameConfigs.bubbleCollisionBitMask;
+            redball.position = CGPointMake(self.size.width/2.f, self.size.height/2.f);
+            [self addChild:redball];
+            //可以通过施加一个推力（牛顿）或者j冲量 或者直接赋值速度，直接赋值速度比较方便，推力需要计算
+//            [redball.physicsBody applyForce:[vectors[i] CGVectorValue]];
+            redball.physicsBody.velocity = [vectors[i%vectors.count] CGVectorValue];
+        });
+    }
+}
+
+
+```
+
+##### 第二是碰撞的检测
+
+> 在上面初始化scene物理世界的时候，有一段`self.physicsWorld.contactDelegate = self;`其实就是设置了物理设置的碰撞代理为scene，那我们就可以在碰撞代理回调里拿到红球和bubble的碰撞了，另外一点，碰撞必须设置collisionBitMask和contactTestBitMask，也就是谁，以及碰撞了谁需要通知，这里设置为对方的掩码就行。
+
+```objc
+
+#pragma mark - PhysicsContact
+- (void)didBeginContact:(SKPhysicsContact *)contact {
+    
+}
+
+- (void)didEndContact:(SKPhysicsContact *)contact {
+    
+    RedBall *redBall = nil;
+    Bubble  *bubble = nil;
+    
+    if ([contact.bodyA.node isKindOfClass:RedBall.class]) {
+        redBall = (RedBall*)contact.bodyA.node;
+        bubble = (Bubble*)contact.bodyB.node;
+    }else {
+        redBall = (RedBall*)contact.bodyB.node;
+        bubble = (Bubble*)contact.bodyA.node;
+    }
+    
+    if (!([redBall isKindOfClass:RedBall.class]&&[bubble isKindOfClass:Bubble.class])) {
+        return;
+    }
+    
+    redBall.effectType = bubble.bubbleType==BubbleTypeIce?RedBallEffectTypeIceing:RedBallEffectTypeNone;
+    
+    if (bubble.growthing) {
+        [bubble stopGrowthing];
+        [self creatBubbleFaildWithBubble:bubble];
+        [self.soundManager playMakeBubbleFaildSoundForByHit];
+        [bubble fadeOut];
+        self.currentGrowthingBubble = nil;
+    }
+}
+
+```
+
+> 以上就是我们可以分别在碰撞前和碰撞后的代码里实现我们的需求，碰撞后的话速度的方向之类的已经受到了改变。
+
+
+##### 再就是倒计时的实现，之前我们也说可以通过NSTimer实现，但是NSTimer不会受到SK的管理。也就是暂停等需要我们自己的维护，非常不方便，而我们其实可以通过重写scene的update:方法来实现毫秒级的时间监测，来实现倒计时之类的实现。
+
+```objc
+
+#pragma mark  game loop
+//每隔0.01秒调用 currentTime 是秒 精确到后三位 例如1.002秒
+-(void)update:(CFTimeInterval)currentTime {
+    
+    if (_isGameStart) {
+        if(self.gameBeganTime==0){
+            self.gameBeganTime = currentTime;
+        }else {
+            [self updateGameDuration:currentTime - self.gameBeganTime];
+        }
+    }
+}
+
+- (void)updateGameDuration:(CFTimeInterval)gameDuration {
+    if (gameDuration>=GameConfigs.totalTimeForPass) {
+        if (self.onGameNeedRestart) {
+            self.onGameNeedRestart(NO);
+        }
+        return;
+    }
+    CGFloat progress = 1.00f-(gameDuration/GameConfigs.totalTimeForPass);
+    [self.timeBar updateProgress:progress animation:NO];
+    if (progress<=GameConfigs.nomuchTimeRate) {
+        [self.soundManager playNomuchTimeSound];
+    }
+}
+
+
+```
+
+##### 以上是对我们这个泡泡游戏的一些实现过程的解释，其中的细节在demo里也有非常详细的注释，其实我们只是用到了SK里面非常少的功能，起还有其他强大之处可以给我们使用，也期待会有更多的场景能在我们APP中用到SK这个强大的框架。
 
 
 <br>
-<br>
-<br>
 
+[↑↑↑↑回到顶部↑↑↑↑](#readme)
 
+[↑↑↑↑回到顶部↑↑↑↑](#readme)
 
+[↑↑↑↑回到顶部↑↑↑↑](#readme)
 
 
 
