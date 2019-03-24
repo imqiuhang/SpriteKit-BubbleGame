@@ -5,7 +5,7 @@
 ##### 传送门🚪 imqiuhang其他文章
 1. [CoreAnimation深入学习的愉快探讨](https://github.com/imqiuhang/CoreAnimationLearning/blob/master/README.md)
 2. [CoreML2-iOS12机器学习的一些了解和实践过程](https://github.com/imqiuhang/CoreML2-Learning)
-3. [关于设计模式的一些思考和改进](https://www.jianshu.com/p/1d1ae95078ee)
+3. [关于设计模式的一些思考和改进](https://github.com/imqiuhang/code-design)
 4. [iOS SpriteKit的一些实践过程](https://github.com/imqiuhang/BubbleGame)
 5. ...努力定时更新中...^_^
 
