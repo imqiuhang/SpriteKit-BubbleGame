@@ -2,14 +2,6 @@
 ### iOS 2D游戏框架-SpriteKit的一些实践过程
 ###### @author [imqiuhang](https://github.com/imqiuhang)
 
-##### 传送门🚪 imqiuhang其他文章
-1. [CoreAnimation深入学习的愉快探讨](https://github.com/imqiuhang/CoreAnimationLearning/blob/master/README.md)
-2. [CoreML2-iOS12机器学习的一些了解和实践过程](https://github.com/imqiuhang/CoreML2-Learning)
-3. [关于设计模式的一些思考和改进](https://github.com/imqiuhang/code-design)
-4. [iOS SpriteKit的一些实践过程](https://github.com/imqiuhang/BubbleGame)
-5. ...努力定时更新中...^_^
-
-
 
 ### 📣前言
 >如果你是iOS开发者，刚好对2D游戏感兴趣，或者想在你的APP中增加一些有趣的场景互动，那么SpriteKit会是一个很好的选择，优秀的物理引擎，熟悉的OC/swift语言配方，和UIKit的无缝对接，使得学习成本非常的低，假如你刚好也了解Cocos2D相关，那么学习成本几乎为0。不过即使之前没有任何物理引擎和2D游戏的了解也没关系，因为我们的Apple已经把生涩难懂的部分封装成了非常简单的API供我们调用即可。
